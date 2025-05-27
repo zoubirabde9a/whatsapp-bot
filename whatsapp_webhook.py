@@ -51,9 +51,11 @@ def verify_webhook():
     if mode and token:
         if mode == 'subscribe' and token == VERIFY_TOKEN:
             print('WEBHOOK_VERIFIED')
-            return challenge
+            return challenge, 200
         else:
             return 'Forbidden', 403
+    # Always return a response
+    return 'Bad Request', 400
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
