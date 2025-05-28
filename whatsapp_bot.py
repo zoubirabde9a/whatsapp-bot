@@ -4,6 +4,7 @@ import openai
 from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta
+from constants import SYSTEM_PROMPT
 
 # Load environment variables
 load_dotenv()
@@ -25,7 +26,7 @@ class WhatsAppBot:
             openai.api_key = os.getenv('API_KEY')
             openai.api_base = os.getenv('API_BASE_URL')
             self.model = os.getenv('MODEL_NAME')
-            self.system_prompt = self._load_system_prompt()
+            self.system_prompt = SYSTEM_PROMPT
         except Exception as e:
             raise Exception(f"Failed to initialize OpenAI client: {str(e)}")
         
@@ -47,21 +48,24 @@ class WhatsAppBot:
                 "name": "Premium Widget",
                 "price": 99.99,
                 "description": "High-quality widget with advanced features",
-                "stock": 50
+                "stock": 50,
+                "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
             },
             {
                 "id": 2,
                 "name": "Super Gadget",
                 "price": 149.99,
                 "description": "Innovative gadget for modern needs",
-                "stock": 30
+                "stock": 30,
+                "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
             },
             {
                 "id": 3,
                 "name": "Deluxe Toolset",
                 "price": 199.99,
                 "description": "Complete set of professional tools",
-                "stock": 20
+                "stock": 20,
+                "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
             }
         ]
 
