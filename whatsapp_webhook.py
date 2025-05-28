@@ -85,4 +85,5 @@ def webhook():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)  # or any internal port, no SSL
+    # Gunicorn will handle running the app
+    pass
