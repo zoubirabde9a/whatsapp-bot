@@ -22,9 +22,9 @@ PHONE_NUMBER_ID = "687405501116512"
 
 def send_message(recipient_number: str, message_text: str):
     """Send a WhatsApp message using the API."""
-    token = os.getenv("WHATSAPP_TOKEN")
+    token = os.getenv("WHATSAPP_API_TOKEN")
     if not token:
-        raise ValueError("WHATSAPP_TOKEN not found in environment variables")
+        raise ValueError("WHATSAPP_API_TOKEN not found in environment variables")
 
     headers = {
         'Authorization': f'Bearer {token}',
@@ -48,7 +48,7 @@ def send_message(recipient_number: str, message_text: str):
     return response.json()
 
 # Check for required WhatsApp environment variables
-required_whatsapp_vars = ['WHATSAPP_VERIFY_TOKEN', 'WHATSAPP_TOKEN']
+required_whatsapp_vars = ['WHATSAPP_VERIFY_TOKEN', 'WHATSAPP_API_TOKEN']
 missing_whatsapp_vars = [var for var in required_whatsapp_vars if not os.getenv(var)]
 if missing_whatsapp_vars:
     logger.warning(f"Missing WhatsApp environment variables: {', '.join(missing_whatsapp_vars)}")
