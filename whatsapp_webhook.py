@@ -104,7 +104,9 @@ def webhook():
                     
                     # Add bot response to conversation history
                     conversation_manager.add_message(phone_number, "assistant", response)
-                    
+                    print("history:\n")
+                    print(history)
+
                     # Send response back to WhatsApp
                     try:
                         send_message(phone_number, response)
