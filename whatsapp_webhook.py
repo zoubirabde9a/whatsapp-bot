@@ -4,6 +4,7 @@ from conversation_manager import ConversationManager
 import os
 from dotenv import load_dotenv
 import logging
+import requests
 
 # Configure logging
 logging.basicConfig(
@@ -15,8 +16,39 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 
+# WhatsApp API Configuration
+API_VERSION = "v22.0"
+PHONE_NUMBER_ID = "687405501116512"
+
+def send_message(recipient_number: str, message_text: str):
+    """Send a WhatsApp message using the API."""
+    token = os.getenv("WHATSAPP_TOKEN")
+    if not token:
+        raise ValueError("WHATSAPP_TOKEN not found in environment variables")
+
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": recipient_number,
+        "type": "text",
+        "text": {
+            "body": message_text
+        }
+    }
+
+    response = requests.post(
+        f"https://graph.facebook.com/{API_VERSION}/{PHONE_NUMBER_ID}/messages",
+        headers=headers,
+        json=payload
+    )
+    return response.json()
+
 # Check for required WhatsApp environment variables
-required_whatsapp_vars = ['WHATSAPP_VERIFY_TOKEN', 'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_TOKEN']
+required_whatsapp_vars = ['WHATSAPP_VERIFY_TOKEN', 'WHATSAPP_TOKEN']
 missing_whatsapp_vars = [var for var in required_whatsapp_vars if not os.getenv(var)]
 if missing_whatsapp_vars:
     logger.warning(f"Missing WhatsApp environment variables: {', '.join(missing_whatsapp_vars)}")
@@ -73,7 +105,11 @@ def webhook():
                     conversation_manager.add_message(phone_number, "assistant", response)
                     
                     # Send response back to WhatsApp
-                    send_whatsapp_message(phone_number, response)
+                    try:
+                        send_message(phone_number, response)
+                        logger.info(f"Successfully sent message to {phone_number}")
+                    except Exception as e:
+                        logger.error(f"Failed to send WhatsApp message: {str(e)}")
                     
                     return jsonify({"status": "success"})
         
@@ -82,33 +118,6 @@ def webhook():
     except Exception as e:
         logger.error(f"Error processing webhook: {str(e)}")
         return jsonify({"status": "error", "message": str(e)})
-
-def send_whatsapp_message(phone_number: str, message: str):
-    """Send message back to WhatsApp"""
-    try:
-        # This is a placeholder for the actual WhatsApp API call
-        # You'll need to implement this using the WhatsApp Business API
-        # or a service like Twilio
-        logger.info(f"Sending message to {phone_number}: {message}")
-        
-        # Example implementation using requests (you'll need to add proper authentication)
-        # import requests
-        # url = f"https://graph.facebook.com/v17.0/{os.getenv('WHATSAPP_PHONE_NUMBER_ID')}/messages"
-        # headers = {
-        #     "Authorization": f"Bearer {os.getenv('WHATSAPP_TOKEN')}",
-        #     "Content-Type": "application/json"
-        # }
-        # data = {
-        #     "messaging_product": "whatsapp",
-        #     "to": phone_number,
-        #     "type": "text",
-        #     "text": {"body": message}
-        # }
-        # response = requests.post(url, headers=headers, json=data)
-        # return response.json()
-    except Exception as e:
-        logger.error(f"Error sending WhatsApp message: {str(e)}")
-        raise
 
 @app.route('/webhook', methods=['GET'])
 def verify_webhook():
