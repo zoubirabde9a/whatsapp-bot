@@ -99,11 +99,6 @@ class WhatsAppBot:
             if history:
                 messages.extend(history)
             
-            print("history:\n")
-            print(history)
-            print("messages:\n")
-            print(messages)
-            
             # Add the current message
             messages.append({"role": "user", "content": message})
 

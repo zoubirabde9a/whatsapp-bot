@@ -97,7 +97,8 @@ def webhook():
                     
                     # Get conversation history
                     history = conversation_manager.get_conversation_history(phone_number)
-                    
+                    print("history:\n")
+                    print(history)
                     # Process message with bot using conversation history
                     response = bot.process_message(message_content, phone_number, history)
                     
