@@ -98,8 +98,8 @@ def webhook():
                     # Get conversation history
                     history = conversation_manager.get_conversation_history(phone_number)
                     
-                    # Process message with bot
-                    response = bot.process_message(message_content, phone_number)
+                    # Process message with bot using conversation history
+                    response = bot.process_message(message_content, phone_number, history)
                     
                     # Add bot response to conversation history
                     conversation_manager.add_message(phone_number, "assistant", response)

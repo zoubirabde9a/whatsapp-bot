@@ -78,7 +78,7 @@ class WhatsAppBot:
         }
         return order
 
-    def process_message(self, message: str, client_id: str) -> str:
+    def process_message(self, message: str, client_id: str, history: List[Dict] = None) -> str:
         """Process incoming message and generate response using LLM"""
         try:
             # Get available products
@@ -88,9 +88,15 @@ class WhatsAppBot:
             # Create messages for the chat
             messages = [
                 {"role": "system", "content": self.system_prompt},
-                {"role": "system", "content": f"Available products: {products_info}"},
-                {"role": "user", "content": message}
+                {"role": "system", "content": f"Available products: {products_info}"}
             ]
+            
+            # Add conversation history if available
+            if history:
+                messages.extend(history)
+            
+            # Add the current message
+            messages.append({"role": "user", "content": message})
 
             # Generate response using OpenRouter
             response = openai.ChatCompletion.create(
