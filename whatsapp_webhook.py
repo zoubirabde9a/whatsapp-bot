@@ -3,13 +3,33 @@ from whatsapp_bot import WhatsAppBot
 from conversation_manager import ConversationManager
 import os
 from dotenv import load_dotenv
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
 
+# Check for required WhatsApp environment variables
+required_whatsapp_vars = ['WHATSAPP_VERIFY_TOKEN', 'WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_TOKEN']
+missing_whatsapp_vars = [var for var in required_whatsapp_vars if not os.getenv(var)]
+if missing_whatsapp_vars:
+    logger.warning(f"Missing WhatsApp environment variables: {', '.join(missing_whatsapp_vars)}")
+
 app = Flask(__name__)
-bot = WhatsAppBot()
-conversation_manager = ConversationManager()
+
+try:
+    bot = WhatsAppBot()
+    conversation_manager = ConversationManager()
+    logger.info("Bot initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize bot: {str(e)}")
+    raise
 
 def format_phone_number(phone: str) -> str:
     """Format phone number to standard format"""
@@ -38,6 +58,8 @@ def webhook():
                     phone_number = format_phone_number(message['from'])
                     message_content = message['text']['body']
                     
+                    logger.info(f"Received message from {phone_number}: {message_content}")
+                    
                     # Add user message to conversation history
                     conversation_manager.add_message(phone_number, "user", message_content)
                     
@@ -58,43 +80,52 @@ def webhook():
         return jsonify({"status": "error", "message": "Invalid webhook data"})
     
     except Exception as e:
+        logger.error(f"Error processing webhook: {str(e)}")
         return jsonify({"status": "error", "message": str(e)})
 
 def send_whatsapp_message(phone_number: str, message: str):
     """Send message back to WhatsApp"""
-    # This is a placeholder for the actual WhatsApp API call
-    # You'll need to implement this using the WhatsApp Business API
-    # or a service like Twilio
-    print(f"Sending message to {phone_number}: {message}")
-    
-    # Example implementation using requests (you'll need to add proper authentication)
-    # import requests
-    # url = f"https://graph.facebook.com/v17.0/{os.getenv('WHATSAPP_PHONE_NUMBER_ID')}/messages"
-    # headers = {
-    #     "Authorization": f"Bearer {os.getenv('WHATSAPP_TOKEN')}",
-    #     "Content-Type": "application/json"
-    # }
-    # data = {
-    #     "messaging_product": "whatsapp",
-    #     "to": phone_number,
-    #     "type": "text",
-    #     "text": {"body": message}
-    # }
-    # response = requests.post(url, headers=headers, json=data)
-    # return response.json()
+    try:
+        # This is a placeholder for the actual WhatsApp API call
+        # You'll need to implement this using the WhatsApp Business API
+        # or a service like Twilio
+        logger.info(f"Sending message to {phone_number}: {message}")
+        
+        # Example implementation using requests (you'll need to add proper authentication)
+        # import requests
+        # url = f"https://graph.facebook.com/v17.0/{os.getenv('WHATSAPP_PHONE_NUMBER_ID')}/messages"
+        # headers = {
+        #     "Authorization": f"Bearer {os.getenv('WHATSAPP_TOKEN')}",
+        #     "Content-Type": "application/json"
+        # }
+        # data = {
+        #     "messaging_product": "whatsapp",
+        #     "to": phone_number,
+        #     "type": "text",
+        #     "text": {"body": message}
+        # }
+        # response = requests.post(url, headers=headers, json=data)
+        # return response.json()
+    except Exception as e:
+        logger.error(f"Error sending WhatsApp message: {str(e)}")
+        raise
 
 @app.route('/webhook', methods=['GET'])
 def verify_webhook():
     """Verify webhook for WhatsApp"""
-    # Get the verification token from the query parameters
-    verify_token = request.args.get('hub.verify_token')
-    
-    # Check if the token matches your verification token
-    if verify_token == os.getenv('WHATSAPP_VERIFY_TOKEN'):
-        # Return the challenge token
-        return request.args.get('hub.challenge')
-    
-    return 'Invalid verification token'
+    try:
+        # Get the verification token from the query parameters
+        verify_token = request.args.get('hub.verify_token')
+        
+        # Check if the token matches your verification token
+        if verify_token == os.getenv('WHATSAPP_VERIFY_TOKEN'):
+            # Return the challenge token
+            return request.args.get('hub.challenge')
+        
+        return 'Invalid verification token'
+    except Exception as e:
+        logger.error(f"Error verifying webhook: {str(e)}")
+        return 'Error verifying webhook'
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

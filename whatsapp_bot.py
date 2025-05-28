@@ -3,19 +3,32 @@ from typing import List, Dict
 from openai import OpenAI
 from dotenv import load_dotenv
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Load environment variables
 load_dotenv()
 
 class WhatsAppBot:
     def __init__(self):
-        self.client = OpenAI(
-            api_key=os.getenv('API_KEY'),
-            base_url=os.getenv('API_BASE_URL')
-        )
-        self.model = os.getenv('MODEL_NAME')
-        self.system_prompt = self._load_system_prompt()
+        # Check for required environment variables
+        required_vars = ['API_KEY', 'API_BASE_URL', 'MODEL_NAME']
+        missing_vars = [var for var in required_vars if not os.getenv(var)]
+        
+        if missing_vars:
+            raise ValueError(
+                f"Missing required environment variables: {', '.join(missing_vars)}. "
+                "Please check your .env file and ensure all required variables are set."
+            )
+
+        try:
+            self.client = OpenAI(
+                api_key=os.getenv('API_KEY'),
+                base_url=os.getenv('API_BASE_URL')
+            )
+            self.model = os.getenv('MODEL_NAME')
+            self.system_prompt = self._load_system_prompt()
+        except Exception as e:
+            raise Exception(f"Failed to initialize OpenAI client: {str(e)}")
         
     def _load_system_prompt(self) -> str:
         """Load the system prompt from file"""
@@ -23,6 +36,7 @@ class WhatsAppBot:
             with open('system_prompt.txt', 'r') as file:
                 return file.read()
         except FileNotFoundError:
+            print("Warning: system_prompt.txt not found, using default prompt")
             return "You are a helpful sales assistant bot."
 
     def get_list_products(self) -> List[Dict]:
@@ -94,8 +108,10 @@ class WhatsAppBot:
 
 # Example usage
 if __name__ == "__main__":
-    bot = WhatsAppBot()
-    
-    # Example conversation
-    response = bot.process_message("Hello! What products do you have?", "client123")
-    print(response)
+    try:
+        bot = WhatsAppBot()
+        # Example conversation
+        response = bot.process_message("Hello! What products do you have?", "client123")
+        print(response)
+    except Exception as e:
+        print(f"Error initializing bot: {str(e)}")
