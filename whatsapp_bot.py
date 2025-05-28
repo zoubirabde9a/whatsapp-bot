@@ -1,6 +1,6 @@
 import os
 from typing import List, Dict
-from openai import OpenAI
+import openai
 from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta
@@ -21,10 +21,9 @@ class WhatsAppBot:
             )
 
         try:
-            self.client = OpenAI(
-                api_key=os.getenv('API_KEY'),
-                base_url=os.getenv('API_BASE_URL')
-            )
+            # Configure OpenAI client
+            openai.api_key = os.getenv('API_KEY')
+            openai.api_base = os.getenv('API_BASE_URL')
             self.model = os.getenv('MODEL_NAME')
             self.system_prompt = self._load_system_prompt()
         except Exception as e:
@@ -94,7 +93,7 @@ class WhatsAppBot:
             ]
 
             # Generate response using OpenRouter
-            response = self.client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model=self.model,
                 messages=messages,
                 temperature=0.7,
