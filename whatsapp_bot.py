@@ -95,9 +95,10 @@ class WhatsAppBot:
                 {"role": "system", "content": f"Available products: {products_info}"}
             ]
             
-            # Add conversation history if available
-            if history:
-                messages.extend(history)
+            for i in range(len(history)):
+                content = history[i]['content']
+                role = history[i]['role']
+                messages.append({"role": role, "content": content})
             
             # Add the current message
             messages.append({"role": "user", "content": message})

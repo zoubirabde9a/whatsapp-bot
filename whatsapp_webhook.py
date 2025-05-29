@@ -91,25 +91,18 @@ def webhook():
                     message_content = message['text']['body']
                     
                     logger.info(f"Received message from {phone_number}: {message_content}")
-                    
-                    # Get conversation history
-                    history = conversation_manager.get_conversation_history(phone_number)
-                    
-                    print("history 0:\n")
-                    print(history)
 
                     # Add user message to conversation history
                     conversation_manager.add_message(phone_number, "user", message_content)
                     
-                    print("history 1:\n")
-                    print(history)
+                    # Get conversation history
+                    history = conversation_manager.get_conversation_history(phone_number)
+                    
                     # Process message with bot using conversation history
                     response = bot.process_message(message_content, phone_number, history)
                     
                     # Add bot response to conversation history
                     conversation_manager.add_message(phone_number, "assistant", response)
-                    print("history 2:\n")
-                    print(history)
 
                     # Send response back to WhatsApp
                     try:
