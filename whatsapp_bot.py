@@ -45,27 +45,34 @@ class WhatsAppBot:
         return [
             {
                 "id": 1,
-                "name": "Premium Widget",
-                "price": 99.99,
-                "description": "High-quality widget with advanced features",
+                "name": "Asus Gaming Mouse",
+                "price": 6500,
+                "description": "Asus Gaming Mouse with RGB lighting and 16000 DPI",
                 "stock": 50,
                 "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
             },
             {
                 "id": 2,
-                "name": "Super Gadget",
-                "price": 149.99,
-                "description": "Innovative gadget for modern needs",
+                "name": "Asus Gaming Keyboard",
+                "price": 17000,
+                "description": "Asus Gaming Keyboard with RGB lighting",
                 "stock": 30,
                 "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
             },
             {
                 "id": 3,
-                "name": "Deluxe Toolset",
-                "price": 199.99,
-                "description": "Complete set of professional tools",
+                "name": "Asus Gaming Headset",
+                "price": 9500,
+                "description": "Asus Gaming Headset with RGB lighting",
                 "stock": 20,
                 "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
+            },
+            {
+                "id": 4,
+                "name": "Asus Gaming Mousepad",
+                "price": 1500,
+                "description": "Asus Gaming Mousepad with RGB lighting",
+                "stock": 10,
             }
         ]
 

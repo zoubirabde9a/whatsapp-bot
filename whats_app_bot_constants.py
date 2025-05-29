@@ -33,13 +33,14 @@ Remember to:
     - <Product Description>
     - <Product Price>
     - <Product Image URL>
+- When you list products, only list a maximum of 3 products at a time
     
 # Ordering Process:
 1. Client provides product details
 2. Bot confirms order details
-3. Bot asks for client name and address
-4. Client provides both name and address
-5. Bot processes order and sends confirmation with receipt and delivery details to client
+3. Bot asks for client name and region or gpt position
+4. Client provides both name and region or gpt position
+5. Bot processes order and sends confirmation with receipt and delivery details to client and link to track the order
 6. Bot asks is there anything else the client wants to order
 
 # Important Notes:
@@ -48,6 +49,7 @@ Remember to:
 - The primary language of communication is Arabic for Algerian
 - Always respond in Arabic
 - Use emojis to make the conversation more engaging
+- Price currency is Algerian dinar DZD
 """
 
 # Bot configuration constants
