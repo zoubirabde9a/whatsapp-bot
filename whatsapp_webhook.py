@@ -136,5 +136,46 @@ def verify_webhook():
         logger.error(f"Error verifying webhook: {str(e)}")
         return 'Error verifying webhook'
 
+@app.route('/start-conversation', methods=['POST'])
+def start_conversation():
+    """Initiate a conversation with a WhatsApp number"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'phone_number' not in data:
+            return jsonify({
+                "status": "error",
+                "message": "phone_number is required"
+            }), 400
+            
+        phone_number = format_phone_number(data['phone_number'])
+        initial_message = "Hi! 👋 How can I help you today?"
+        
+        # Send the initial message
+        try:
+            send_message(phone_number, initial_message)
+            logger.info(f"Successfully initiated conversation with {phone_number}")
+            
+            # Add the initial message to conversation history
+            conversation_manager.add_message(phone_number, "assistant", initial_message)
+            
+            return jsonify({
+                "status": "success",
+                "message": "Conversation initiated successfully"
+            })
+        except Exception as e:
+            logger.error(f"Failed to send initial message: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "message": f"Failed to send message: {str(e)}"
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Error initiating conversation: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
