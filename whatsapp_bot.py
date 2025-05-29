@@ -103,6 +103,11 @@ class WhatsAppBot:
             # Add the current message
             messages.append({"role": "user", "content": message})
 
+            print("messages:\n")
+            for i in range(len(messages)):
+                print(f"message {i}:\n")
+                print(messages[i]['content'])
+
             # Generate response using OpenRouter
             response = openai.ChatCompletion.create(
                 model=self.model,
