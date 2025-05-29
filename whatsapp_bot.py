@@ -82,7 +82,7 @@ class WhatsAppBot:
         }
         return order
 
-    def process_message(self, message: str, client_id: str, history: List[Dict] = None) -> str:
+    def process_message(self, client_id: str, history: List[Dict] = None) -> str:
         """Process incoming message and generate response using LLM"""
         try:
             # Get available products
@@ -99,9 +99,6 @@ class WhatsAppBot:
                 content = history[i]['content']
                 role = history[i]['role']
                 messages.append({"role": role, "content": content})
-            
-            # Add the current message
-            messages.append({"role": "user", "content": message})
 
             print("messages:\n")
             for i in range(len(messages)):
@@ -125,8 +122,12 @@ class WhatsAppBot:
 if __name__ == "__main__":
     try:
         bot = WhatsAppBot()
+        history = [
+            {"role": "user", "content": "Hello! What products do you have?"},
+            {"role": "assistant", "content": "I have the following products available: 1. Premium Widget, 2. Super Gadget, 3. Deluxe Toolset."}
+        ]
         # Example conversation
-        response = bot.process_message("Hello! What products do you have?", "client123")
+        response = bot.process_message("client123", history)
         print(response)
     except Exception as e:
         print(f"Error initializing bot: {str(e)}")
