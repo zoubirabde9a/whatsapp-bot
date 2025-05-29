@@ -4,7 +4,7 @@ import openai
 from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta
-from constants import SYSTEM_PROMPT
+from whats_app_bot_constants import SYSTEM_PROMPT
 
 # Load environment variables
 load_dotenv()
