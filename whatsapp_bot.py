@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta
 from whats_app_bot_constants import SYSTEM_PROMPT
+from whatsapp_bot_tools import get_list_products, add_order_for_client, create_order, get_order_status
 
 # Load environment variables
 load_dotenv()
@@ -39,61 +40,11 @@ class WhatsAppBot:
             print("Warning: system_prompt.txt not found, using default prompt")
             return "You are a helpful sales assistant bot."
 
-    def get_list_products(self) -> List[Dict]:
-        """Returns a list of available products"""
-        # Placeholder product list
-        return [
-            {
-                "id": 1,
-                "name": "Asus Gaming Mouse",
-                "price": 6500,
-                "description": "Asus Gaming Mouse with RGB lighting and 16000 DPI",
-                "stock": 50,
-                "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
-            },
-            {
-                "id": 2,
-                "name": "Asus Gaming Keyboard",
-                "price": 17000,
-                "description": "Asus Gaming Keyboard with RGB lighting",
-                "stock": 30,
-                "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
-            },
-            {
-                "id": 3,
-                "name": "Asus Gaming Headset",
-                "price": 9500,
-                "description": "Asus Gaming Headset with RGB lighting",
-                "stock": 20,
-                "image_url": "https://www.picpedia.org/chalkboard/images/example.jpg",
-            },
-            {
-                "id": 4,
-                "name": "Asus Gaming Mousepad",
-                "price": 1500,
-                "description": "Asus Gaming Mousepad with RGB lighting",
-                "stock": 10,
-            }
-        ]
-
-    def add_order_for_client(self, client_id: str, items: List[Dict]) -> Dict:
-        """Process an order for a client"""
-        # Placeholder order processing
-        order = {
-            "order_id": f"ORD-{datetime.now().strftime('%Y%m%d%H%M%S')}",
-            "client_id": client_id,
-            "items": items,
-            "total_amount": sum(item["price"] * item["quantity"] for item in items),
-            "delivery_date": (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d"),
-            "status": "scheduled"
-        }
-        return order
-
     def process_message(self, client_id: str, history: List[Dict] = None) -> str:
         """Process incoming message and generate response using LLM"""
         try:
             # Get available products
-            products = self.get_list_products()
+            products = get_list_products()
             products_info = json.dumps(products, indent=2)
 
             # Create messages for the chat
