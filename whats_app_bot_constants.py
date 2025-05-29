@@ -38,8 +38,8 @@ Remember to:
 # Ordering Process:
 1. Client provides product details
 2. Bot confirms order details
-3. Bot asks for client name and region name
-4. Client provides both name and region name 
+3. Bot asks for client name and location name
+4. Client provides both name and location name 
 5. Bot processes order and sends confirmation with receipt and delivery details to client and link to track the order
 6. Bot asks is there anything else the client wants to order
 
@@ -50,6 +50,7 @@ Remember to:
 - Always respond in Arabic
 - Use emojis to make the conversation more engaging
 - Price currency is Algerian dinar DZD
+- We dont use emails to send receipts or track orders, we use messages
 """
 
 # Bot configuration constants

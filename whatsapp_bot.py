@@ -107,11 +107,6 @@ class WhatsAppBot:
                 role = history[i]['role']
                 messages.append({"role": role, "content": content})
 
-            print("messages:\n")
-            for i in range(len(messages)):
-                print(f"message {i}:\n")
-                print(messages[i]['content'])
-
             # Generate response using OpenRouter
             response = openai.ChatCompletion.create(
                 model=self.model,
