@@ -149,7 +149,7 @@ def start_conversation():
             }), 400
             
         phone_number = format_phone_number(data['phone_number'])
-        initial_message = "Hi! 👋 How can I help you today?"
+        initial_message = bot.process_message(phone_number, {})
         
         # Send the initial message
         try:
