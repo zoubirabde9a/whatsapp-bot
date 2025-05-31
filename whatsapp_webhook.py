@@ -18,7 +18,7 @@ load_dotenv()
 
 # WhatsApp API Configuration
 API_VERSION = "v22.0"
-PHONE_NUMBER_ID = "687405501116512"
+PHONE_NUMBER_ID = "684720388053837" # "687405501116512"
 
 def send_message(recipient_number: str, message_text: str):
     """Send a WhatsApp message using the API."""
